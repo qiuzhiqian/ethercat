@@ -82,6 +82,11 @@ parse_mac_address() {
 case "${1}" in
 
 start)
+    # bring up all updown interfaces before anything else
+    for interface in $UPDOWN_INTERFACES; do
+        $IP link set dev $interface up
+    done
+
     # construct DEVICES and BACKUPS from configuration variables
     DEVICES=""
     BACKUPS=""
@@ -167,6 +172,11 @@ stop)
             continue
         fi
         ${MODPROBE} ${MODPROBE_FLAGS} "${MODULE}"
+    done
+
+    # bring down all updown interfaces
+    for interface in $UPDOWN_INTERFACES; do
+        $IP link set dev $interface down
     done
 
     exit 0
