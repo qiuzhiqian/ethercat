@@ -47,6 +47,7 @@ AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([config.h.in])
 AC_CONFIG_MACRO_DIR([m4])
 AC_PROG_SED
+AC_PROG_MKDIR_P
 m4_ifndef([PKG_INSTALLDIR], [m4_fatal([pkgconf or pkg-config not found or too old (`pkg-config --version` must be >= 0.27)])])
 PKG_PROG_PKG_CONFIG(0.27)
 PKG_INSTALLDIR
