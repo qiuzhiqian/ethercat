@@ -1141,6 +1141,16 @@ else
 fi
 
 #------------------------------------------------------------------------------
+# init.d support
+#------------------------------------------------------------------------------
+
+AC_ARG_ENABLE([initd],
+    AS_HELP_STRING([--disable-initd],
+                   [Disable /etc/init.d script support (default: enabled)])
+)
+AM_CONDITIONAL(HAVE_INITD, test "x$enable_initd" != "xno")
+
+#------------------------------------------------------------------------------
 # systemd service support
 #------------------------------------------------------------------------------
 
@@ -1208,9 +1218,6 @@ AC_CONFIG_FILES([
         master/Kbuild
         master/Makefile
         script/Makefile
-        script/init.d/Makefile
-        script/init.d/ethercat
-        script/sysconfig/Makefile
         tool/Makefile
         tty/Kbuild
         tty/Makefile
