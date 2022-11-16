@@ -41,20 +41,20 @@ test cmake:
         - make
         - ldd userexample
 
-pages:
+doxygen:
     stage: deploy
     rules:
         - if: $CI_COMMIT_BRANCH == "stable-1.5"
+    variables:
+        GIT_SUBMODULE_STRATEGY: recursive
     script:
         - ./bootstrap
         - ./configure --with-linux-dir=/usr/src/linux-obj/$(uname -i)/default --disable-8139too --enable-tty --with-devices=2 --enable-ccat
         - doxygen
-        - mkdir public
-        - echo "/ethercat /ethercat/v1 301" > public/_redirects
-        - mv doxygen-output/html/ public/v1/
+        - mv doxygen-output/html/ html/
     artifacts:
         paths:
-            - public/
+            - html/
 
 documentation:
     stage: deploy
