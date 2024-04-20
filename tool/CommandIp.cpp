@@ -53,13 +53,14 @@ string CommandIp::helpString(const string &binaryBaseName) const
         << endl
         << "IP parameters can be appended as argument pairs:" << endl
         << endl
-        << "  addr <IPv4>[/prefix]  IP address (optionally with" << endl
-        << "                        decimal subnet prefix)" << endl
-        << "  link <MAC>            Link-layer address (may contain" << endl
-        << "                        colons or hyphens)" << endl
-        << "  default <IPv4>        Default gateway" << endl
-        << "  dns <IPv4>            DNS server" << endl
-        << "  name <hostname>       Host name (max. 32 byte)" << endl
+        << "  ip_address <IPv4>[/prefix]  IP address (optionally with" << endl
+        << "                                decimal subnet prefix)" << endl
+        << "  mac_address <MAC>           Link-layer address (may contain"
+        << endl
+        << "                                colons or hyphens)" << endl
+        << "  default_gateway <IPv4>      Default gateway" << endl
+        << "  dns_address <IPv4>          DNS server address" << endl
+        << "  hostname <hostname>         Host name (max. 32 byte)" << endl
         << endl
         << "IPv4 adresses can be given either in dot notation or as" << endl
         << "hostnames, which will be automatically resolved." << endl
@@ -88,30 +89,30 @@ void CommandIp::execute(const StringVector &args)
         throwInvalidUsageException(err);
     }
 
-    ec_ioctl_slave_eoe_ip_t io = {};
+    ec_ioctl_eoe_ip_t io = {};
 
     for (unsigned int argIdx = 0; argIdx < args.size(); argIdx += 2) {
         string arg = args[argIdx];
         string val = args[argIdx + 1];
         std::transform(arg.begin(), arg.end(), arg.begin(), ::tolower);
 
-        if (arg == "link") {
+        if (arg == "link" or arg == "mac_address") {
             parseMac(io.mac_address, val);
             io.mac_address_included = 1;
         }
-        else if (arg == "addr") {
+        else if (arg == "addr" or arg == "ip_address") {
             parseIpv4Prefix(&io, val);
             io.ip_address_included = 1;
         }
-        else if (arg == "default") {
+        else if (arg == "default" or arg == "default_gateway") {
             resolveIpv4(&io.gateway, val);
             io.gateway_included = 1;
         }
-        else if (arg == "dns") {
+        else if (arg == "dns" or arg == "dns_adress") {
             resolveIpv4(&io.dns, val);
             io.dns_included = 1;
         }
-        else if (arg == "name") {
+        else if (arg == "name" or arg == "hostname") {
             if (val.size() > EC_MAX_HOSTNAME_SIZE - 1) {
                 stringstream err;
                 err << "Name too long!";
@@ -182,7 +183,7 @@ void CommandIp::parseMac(unsigned char mac[EC_ETH_ALEN], const string &str)
 
 /****************************************************************************/
 
-void CommandIp::parseIpv4Prefix(ec_ioctl_slave_eoe_ip_t *io,
+void CommandIp::parseIpv4Prefix(ec_ioctl_eoe_ip_t *io,
         const string &str)
 {
     size_t pos = str.find('/');
