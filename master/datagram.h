@@ -1,6 +1,4 @@
-/******************************************************************************
- *
- *  $Id$
+/*****************************************************************************
  *
  *  Copyright (C) 2006-2008  Florian Pose, Ingenieurgemeinschaft IgH
  *
@@ -19,20 +17,14 @@
  *  with the IgH EtherCAT Master; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- *  ---
- *
- *  The license mentioned above concerns the source code only. Using the
- *  EtherCAT technology and brand is only permitted in compliance with the
- *  industrial property and similar rights of Beckhoff Automation GmbH.
- *
- *****************************************************************************/
+ ****************************************************************************/
 
 /**
    \file
    EtherCAT datagram structure.
 */
 
-/*****************************************************************************/
+/****************************************************************************/
 
 #ifndef __EC_DATAGRAM_H__
 #define __EC_DATAGRAM_H__
@@ -43,7 +35,7 @@
 
 #include "globals.h"
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** EtherCAT datagram type.
  */
@@ -67,7 +59,7 @@ typedef enum {
                                Write. */
 } ec_datagram_type_t;
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** EtherCAT datagram state.
  */
@@ -80,7 +72,7 @@ typedef enum {
     EC_DATAGRAM_ERROR      /**< Error while sending/receiving (dequeued). */
 } ec_datagram_state_t;
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** EtherCAT datagram.
  */
@@ -112,7 +104,7 @@ typedef struct {
     char name[EC_DATAGRAM_NAME_SIZE]; /**< Description of the datagram. */
 } ec_datagram_t;
 
-/*****************************************************************************/
+/****************************************************************************/
 
 void ec_datagram_init(ec_datagram_t *);
 void ec_datagram_clear(ec_datagram_t *);
@@ -143,6 +135,6 @@ void ec_datagram_print_wc_error(const ec_datagram_t *);
 void ec_datagram_output_stats(ec_datagram_t *);
 const char *ec_datagram_type_string(const ec_datagram_t *);
 
-/*****************************************************************************/
+/****************************************************************************/
 
 #endif

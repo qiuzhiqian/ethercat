@@ -1,4 +1,4 @@
-/******************************************************************************
+/*****************************************************************************
  *
  *  Copyright (C) 2006-2023  Florian Pose, Ingenieurgemeinschaft IgH
  *
@@ -17,20 +17,14 @@
  *  with the IgH EtherCAT Master; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- *  ---
- *
- *  The license mentioned above concerns the source code only. Using the
- *  EtherCAT technology and brand is only permitted in compliance with the
- *  industrial property and similar rights of Beckhoff Automation GmbH.
- *
- *****************************************************************************/
+ ****************************************************************************/
 
 /**
    \file
    EtherCAT master state machine.
 */
 
-/*****************************************************************************/
+/****************************************************************************/
 
 #ifndef __EC_FSM_MASTER_H__
 #define __EC_FSM_MASTER_H__
@@ -44,7 +38,7 @@
 #include "fsm_slave_scan.h"
 #include "fsm_pdo.h"
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** SII write request.
  */
@@ -57,7 +51,7 @@ typedef struct {
     ec_internal_request_state_t state; /**< State of the request. */
 } ec_sii_write_request_t;
 
-/*****************************************************************************/
+/****************************************************************************/
 
 typedef struct ec_fsm_master ec_fsm_master_t; /**< \see ec_fsm_master */
 
@@ -97,7 +91,7 @@ struct ec_fsm_master {
     ec_fsm_sii_t fsm_sii; /**< SII state machine */
 };
 
-/*****************************************************************************/
+/****************************************************************************/
 
 void ec_fsm_master_init(ec_fsm_master_t *, ec_master_t *, ec_datagram_t *);
 void ec_fsm_master_clear(ec_fsm_master_t *);
@@ -107,6 +101,6 @@ void ec_fsm_master_reset(ec_fsm_master_t *);
 int ec_fsm_master_exec(ec_fsm_master_t *);
 int ec_fsm_master_idle(const ec_fsm_master_t *);
 
-/*****************************************************************************/
+/****************************************************************************/
 
 #endif

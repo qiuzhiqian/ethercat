@@ -1,7 +1,5 @@
 /*****************************************************************************
  *
- *  $Id$
- *
  *  Copyright (C) 2006-2009  Florian Pose, Ingenieurgemeinschaft IgH
  *
  *  This file is part of the IgH EtherCAT Master.
@@ -19,12 +17,6 @@
  *  with the IgH EtherCAT Master; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- *  ---
- *
- *  The license mentioned above concerns the source code only. Using the
- *  EtherCAT technology and brand is only permitted in compliance with the
- *  industrial property and similar rights of Beckhoff Automation GmbH.
- *
  *  vim: expandtab
  *
  ****************************************************************************/
@@ -38,14 +30,14 @@ using namespace std;
 #include "CommandConfig.h"
 #include "MasterDevice.h"
 
-/*****************************************************************************/
+/****************************************************************************/
 
 CommandConfig::CommandConfig():
     Command("config", "Show slave configurations.")
 {
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 string CommandConfig::helpString(const string &binaryBaseName) const
 {
@@ -100,7 +92,7 @@ string CommandConfig::helpString(const string &binaryBaseName) const
     return str.str();
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Lists the bus configuration.
  */
@@ -137,7 +129,7 @@ void CommandConfig::execute(const StringVector &args)
     }
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Lists the complete bus configuration.
  */
@@ -328,7 +320,7 @@ void CommandConfig::showDetailedConfigs(
     }
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Lists the bus configuration.
  */
@@ -417,4 +409,4 @@ void CommandConfig::listConfigs(
     }
 }
 
-/*****************************************************************************/
+/****************************************************************************/

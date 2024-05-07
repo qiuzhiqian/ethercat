@@ -1,6 +1,4 @@
-/******************************************************************************
- *
- *  $Id$
+/*****************************************************************************
  *
  *  Copyright (C) 2006-2008  Florian Pose, Ingenieurgemeinschaft IgH
  *
@@ -19,20 +17,14 @@
  *  with the IgH EtherCAT Master; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- *  ---
- *
- *  The license mentioned above concerns the source code only. Using the
- *  EtherCAT technology and brand is only permitted in compliance with the
- *  industrial property and similar rights of Beckhoff Automation GmbH.
- *
- *****************************************************************************/
+ ****************************************************************************/
 
 /**
    \file
    EtherCAT domain methods.
 */
 
-/*****************************************************************************/
+/****************************************************************************/
 
 #include <linux/module.h>
 
@@ -47,11 +39,11 @@
  */
 #define DEBUG_REDUNDANCY 0
 
-/*****************************************************************************/
+/****************************************************************************/
 
 void ec_domain_clear_data(ec_domain_t *);
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Domain constructor.
  */
@@ -81,7 +73,7 @@ void ec_domain_init(
     domain->notify_jiffies = 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Domain destructor.
  */
@@ -99,7 +91,7 @@ void ec_domain_clear(ec_domain_t *domain /**< EtherCAT domain */)
     ec_domain_clear_data(domain);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Frees internally allocated memory.
  */
@@ -115,7 +107,7 @@ void ec_domain_clear_data(
     domain->data_origin = EC_ORIG_INTERNAL;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Adds an FMMU configuration to the domain.
  */
@@ -134,7 +126,7 @@ void ec_domain_add_fmmu_config(
             domain->index, fmmu->data_size, domain->data_size);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Allocates a domain datagram pair and appends it to the list.
  *
@@ -180,7 +172,7 @@ int ec_domain_add_datagram_pair(
     return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Domain finish helper function.
  *
@@ -211,7 +203,7 @@ int shall_count(
     return 1;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Finishes a domain.
  *
@@ -325,7 +317,7 @@ int ec_domain_finish(
     return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Get the number of FMMU configurations of the domain.
  */
@@ -341,7 +333,7 @@ unsigned int ec_domain_fmmu_count(const ec_domain_t *domain)
     return num;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Get a certain FMMU configuration via its position in the list.
  *
@@ -363,7 +355,7 @@ const ec_fmmu_config_t *ec_domain_find_fmmu(
     return NULL;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 #if EC_MAX_NUM_DEVICES > 1
 
@@ -391,9 +383,9 @@ int data_changed(
 
 #endif
 
-/******************************************************************************
+/*****************************************************************************
  *  Application interface
- *****************************************************************************/
+ ****************************************************************************/
 
 int ecrt_domain_reg_pdo_entry_list(ec_domain_t *domain,
         const ec_pdo_entry_reg_t *regs)
@@ -422,14 +414,14 @@ int ecrt_domain_reg_pdo_entry_list(ec_domain_t *domain,
     return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 size_t ecrt_domain_size(const ec_domain_t *domain)
 {
     return domain->data_size;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 void ecrt_domain_external_memory(ec_domain_t *domain, uint8_t *mem)
 {
@@ -446,16 +438,16 @@ void ecrt_domain_external_memory(ec_domain_t *domain, uint8_t *mem)
     up(&domain->master->master_sem);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
-uint8_t *ecrt_domain_data(ec_domain_t *domain)
+uint8_t *ecrt_domain_data(const ec_domain_t *domain)
 {
     return domain->data;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
-void ecrt_domain_process(ec_domain_t *domain)
+int ecrt_domain_process(ec_domain_t *domain)
 {
     uint16_t wc_sum[EC_MAX_NUM_DEVICES] = {}, wc_total;
     ec_datagram_pair_t *pair;
@@ -641,11 +633,12 @@ void ecrt_domain_process(ec_domain_t *domain)
         domain->working_counter_changes = 0;
     }
 #endif
+    return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
-void ecrt_domain_queue(ec_domain_t *domain)
+int ecrt_domain_queue(ec_domain_t *domain)
 {
     ec_datagram_pair_t *datagram_pair;
     ec_device_index_t dev_idx;
@@ -671,11 +664,12 @@ void ecrt_domain_queue(ec_domain_t *domain)
                     &datagram_pair->datagrams[dev_idx]);
         }
     }
+    return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
-void ecrt_domain_state(const ec_domain_t *domain, ec_domain_state_t *state)
+int ecrt_domain_state(const ec_domain_t *domain, ec_domain_state_t *state)
 {
     unsigned int dev_idx;
     uint16_t wc = 0;
@@ -698,9 +692,10 @@ void ecrt_domain_state(const ec_domain_t *domain, ec_domain_state_t *state)
     }
 
     state->redundancy_active = domain->redundancy_active;
+    return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** \cond */
 
@@ -714,4 +709,4 @@ EXPORT_SYMBOL(ecrt_domain_state);
 
 /** \endcond */
 
-/*****************************************************************************/
+/****************************************************************************/

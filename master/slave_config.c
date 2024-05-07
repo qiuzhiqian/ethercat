@@ -1,4 +1,4 @@
-/******************************************************************************
+/*****************************************************************************
  *
  *  Copyright (C) 2006-2023  Florian Pose, Ingenieurgemeinschaft IgH
  *
@@ -17,22 +17,16 @@
  *  with the IgH EtherCAT Master; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- *  ---
- *
- *  The license mentioned above concerns the source code only. Using the
- *  EtherCAT technology and brand is only permitted in compliance with the
- *  industrial property and similar rights of Beckhoff Automation GmbH.
- *
  *  vim: expandtab
  *
- *****************************************************************************/
+ ****************************************************************************/
 
 /**
    \file
    EtherCAT slave configuration methods.
 */
 
-/*****************************************************************************/
+/****************************************************************************/
 
 #include <linux/module.h>
 #include <linux/slab.h>
@@ -44,7 +38,7 @@
 
 #include "slave_config.h"
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Slave configuration constructor.
  *
@@ -94,7 +88,7 @@ void ec_slave_config_init(
     ec_coe_emerg_ring_init(&sc->emerg_ring, sc);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Slave configuration destructor.
  *
@@ -169,7 +163,7 @@ void ec_slave_config_clear(
     ec_coe_emerg_ring_clear(&sc->emerg_ring);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Prepares an FMMU configuration.
  *
@@ -214,7 +208,7 @@ int ec_slave_config_prepare_fmmu(
     return fmmu->logical_start_address;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Attaches the configuration to the addressed slave object.
  *
@@ -275,7 +269,7 @@ int ec_slave_config_attach(
     return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Detaches the configuration from a slave object.
  */
@@ -300,7 +294,7 @@ void ec_slave_config_detach(
     }
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Loads the default PDO assignment from the slave object.
  */
@@ -325,7 +319,7 @@ void ec_slave_config_load_default_sync_config(ec_slave_config_t *sc)
     }
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Loads the default mapping for a PDO from the slave object.
  */
@@ -379,7 +373,7 @@ void ec_slave_config_load_default_mapping(
     EC_CONFIG_DBG(sc, 1, "No default mapping found.\n");
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Get the number of SDO configurations.
  *
@@ -399,7 +393,7 @@ unsigned int ec_slave_config_sdo_count(
     return count;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Finds an SDO configuration via its position in the list.
  *
@@ -423,7 +417,7 @@ const ec_sdo_request_t *ec_slave_config_get_sdo_by_pos_const(
     return NULL;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Get the number of IDN configurations.
  *
@@ -443,7 +437,7 @@ unsigned int ec_slave_config_idn_count(
     return count;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Finds an IDN configuration via its position in the list.
  *
@@ -467,7 +461,7 @@ const ec_soe_request_t *ec_slave_config_get_idn_by_pos_const(
     return NULL;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Get the number of feature flags.
  *
@@ -487,7 +481,7 @@ unsigned int ec_slave_config_flag_count(
     return count;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Finds a flag via its position in the list.
  *
@@ -511,7 +505,7 @@ const ec_flag_t *ec_slave_config_get_flag_by_pos_const(
     return NULL;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Finds a CoE SDO request via its position in the list.
  *
@@ -533,7 +527,7 @@ ec_sdo_request_t *ec_slave_config_find_sdo_request(
     return NULL;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Finds a SoE request via its position in the list.
  *
@@ -555,7 +549,7 @@ ec_soe_request_t *ec_slave_config_find_soe_request(
     return NULL;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Finds a register handler via its position in the list.
  *
@@ -577,7 +571,7 @@ ec_reg_request_t *ec_slave_config_find_reg_request(
     return NULL;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Finds a VoE handler via its position in the list.
  *
@@ -599,7 +593,7 @@ ec_voe_handler_t *ec_slave_config_find_voe_handler(
     return NULL;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Finds a flag.
  *
@@ -622,9 +616,9 @@ ec_flag_t *ec_slave_config_find_flag(
     return NULL;
 }
 
-/******************************************************************************
+/*****************************************************************************
  *  Application interface
- *****************************************************************************/
+ ****************************************************************************/
 
 int ecrt_slave_config_sync_manager(ec_slave_config_t *sc, uint8_t sync_index,
         ec_direction_t dir, ec_watchdog_mode_t watchdog_mode)
@@ -651,9 +645,9 @@ int ecrt_slave_config_sync_manager(ec_slave_config_t *sc, uint8_t sync_index,
     return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
-void ecrt_slave_config_watchdog(ec_slave_config_t *sc,
+int ecrt_slave_config_watchdog(ec_slave_config_t *sc,
         uint16_t divider, uint16_t intervals)
 {
     EC_CONFIG_DBG(sc, 1, "%s(sc = 0x%p, divider = %u, intervals = %u)\n",
@@ -661,9 +655,10 @@ void ecrt_slave_config_watchdog(ec_slave_config_t *sc,
 
     sc->watchdog_divider = divider;
     sc->watchdog_intervals = intervals;
+    return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 int ecrt_slave_config_pdo_assign_add(ec_slave_config_t *sc,
         uint8_t sync_index, uint16_t pdo_index)
@@ -693,9 +688,9 @@ int ecrt_slave_config_pdo_assign_add(ec_slave_config_t *sc,
     return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
-void ecrt_slave_config_pdo_assign_clear(ec_slave_config_t *sc,
+int ecrt_slave_config_pdo_assign_clear(ec_slave_config_t *sc,
         uint8_t sync_index)
 {
     EC_CONFIG_DBG(sc, 1, "%s(sc = 0x%p, sync_index = %u)\n",
@@ -703,15 +698,16 @@ void ecrt_slave_config_pdo_assign_clear(ec_slave_config_t *sc,
 
     if (sync_index >= EC_MAX_SYNC_MANAGERS) {
         EC_CONFIG_ERR(sc, "Invalid sync manager index %u!\n", sync_index);
-        return;
+        return -EINVAL;
     }
 
     down(&sc->master->master_sem);
     ec_pdo_list_clear_pdos(&sc->sync_configs[sync_index].pdos);
     up(&sc->master->master_sem);
+    return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 int ecrt_slave_config_pdo_mapping_add(ec_slave_config_t *sc,
         uint16_t pdo_index, uint16_t entry_index, uint8_t entry_subindex,
@@ -748,9 +744,9 @@ int ecrt_slave_config_pdo_mapping_add(ec_slave_config_t *sc,
     return retval;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
-void ecrt_slave_config_pdo_mapping_clear(ec_slave_config_t *sc,
+int ecrt_slave_config_pdo_mapping_clear(ec_slave_config_t *sc,
         uint16_t pdo_index)
 {
     uint8_t sync_index;
@@ -771,9 +767,10 @@ void ecrt_slave_config_pdo_mapping_clear(ec_slave_config_t *sc,
     } else {
         EC_CONFIG_WARN(sc, "PDO 0x%04X is not assigned.\n", pdo_index);
     }
+    return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 int ecrt_slave_config_pdos(ec_slave_config_t *sc,
         unsigned int n_syncs, const ec_sync_info_t syncs[])
@@ -840,7 +837,7 @@ int ecrt_slave_config_pdos(ec_slave_config_t *sc,
     return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 int ecrt_slave_config_reg_pdo_entry(
         ec_slave_config_t *sc,
@@ -895,7 +892,7 @@ int ecrt_slave_config_reg_pdo_entry(
     return -ENOENT;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 int ecrt_slave_config_reg_pdo_entry_pos(
         ec_slave_config_t *sc,
@@ -960,9 +957,9 @@ int ecrt_slave_config_reg_pdo_entry_pos(
     return -ENOENT;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
-void ecrt_slave_config_dc(ec_slave_config_t *sc, uint16_t assign_activate,
+int ecrt_slave_config_dc(ec_slave_config_t *sc, uint16_t assign_activate,
         uint32_t sync0_cycle_time, int32_t sync0_shift_time,
         uint32_t sync1_cycle_time, int32_t sync1_shift_time)
 {
@@ -977,9 +974,10 @@ void ecrt_slave_config_dc(ec_slave_config_t *sc, uint16_t assign_activate,
     sc->dc_sync[0].shift_time = sync0_shift_time;
     sc->dc_sync[1].cycle_time = sync1_cycle_time;
     sc->dc_sync[1].shift_time = sync1_shift_time;
+    return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 int ecrt_slave_config_sdo(ec_slave_config_t *sc, uint16_t index,
         uint8_t subindex, const uint8_t *data, size_t size)
@@ -1019,7 +1017,7 @@ int ecrt_slave_config_sdo(ec_slave_config_t *sc, uint16_t index,
     return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 int ecrt_slave_config_sdo8(ec_slave_config_t *sc, uint16_t index,
         uint8_t subindex, uint8_t value)
@@ -1034,7 +1032,7 @@ int ecrt_slave_config_sdo8(ec_slave_config_t *sc, uint16_t index,
     return ecrt_slave_config_sdo(sc, index, subindex, data, 1);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 int ecrt_slave_config_sdo16(ec_slave_config_t *sc, uint16_t index,
         uint8_t subindex, uint16_t value)
@@ -1049,7 +1047,7 @@ int ecrt_slave_config_sdo16(ec_slave_config_t *sc, uint16_t index,
     return ecrt_slave_config_sdo(sc, index, subindex, data, 2);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 int ecrt_slave_config_sdo32(ec_slave_config_t *sc, uint16_t index,
         uint8_t subindex, uint32_t value)
@@ -1064,7 +1062,7 @@ int ecrt_slave_config_sdo32(ec_slave_config_t *sc, uint16_t index,
     return ecrt_slave_config_sdo(sc, index, subindex, data, 4);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 int ecrt_slave_config_complete_sdo(ec_slave_config_t *sc, uint16_t index,
         const uint8_t *data, size_t size)
@@ -1104,35 +1102,35 @@ int ecrt_slave_config_complete_sdo(ec_slave_config_t *sc, uint16_t index,
     return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 int ecrt_slave_config_emerg_size(ec_slave_config_t *sc, size_t elements)
 {
     return ec_coe_emerg_ring_size(&sc->emerg_ring, elements);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 int ecrt_slave_config_emerg_pop(ec_slave_config_t *sc, uint8_t *target)
 {
     return ec_coe_emerg_ring_pop(&sc->emerg_ring, target);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 int ecrt_slave_config_emerg_clear(ec_slave_config_t *sc)
 {
     return ec_coe_emerg_ring_clear_ring(&sc->emerg_ring);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
-int ecrt_slave_config_emerg_overruns(ec_slave_config_t *sc)
+int ecrt_slave_config_emerg_overruns(const ec_slave_config_t *sc)
 {
     return ec_coe_emerg_ring_overruns(&sc->emerg_ring);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Same as ecrt_slave_config_create_sdo_request(), but with ERR_PTR() return
  * value.
@@ -1174,7 +1172,7 @@ ec_sdo_request_t *ecrt_slave_config_create_sdo_request_err(
     return req;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 ec_sdo_request_t *ecrt_slave_config_create_sdo_request(
         ec_slave_config_t *sc, uint16_t index, uint8_t subindex, size_t size)
@@ -1184,7 +1182,7 @@ ec_sdo_request_t *ecrt_slave_config_create_sdo_request(
     return IS_ERR(s) ? NULL : s;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Same as ecrt_slave_config_create_soe_request(), but with ERR_PTR() return
  * value.
@@ -1226,7 +1224,7 @@ ec_soe_request_t *ecrt_slave_config_create_soe_request_err(
     return req;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 ec_soe_request_t *ecrt_slave_config_create_soe_request(
         ec_slave_config_t *sc, uint8_t drive_no, uint16_t idn, size_t size)
@@ -1236,7 +1234,7 @@ ec_soe_request_t *ecrt_slave_config_create_soe_request(
     return IS_ERR(req) ? NULL : req;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Same as ecrt_slave_config_create_reg_request(), but with ERR_PTR() return
  * value.
@@ -1269,7 +1267,7 @@ ec_reg_request_t *ecrt_slave_config_create_reg_request_err(
     return reg;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 ec_reg_request_t *ecrt_slave_config_create_reg_request(
         ec_slave_config_t *sc, size_t size)
@@ -1279,7 +1277,7 @@ ec_reg_request_t *ecrt_slave_config_create_reg_request(
     return IS_ERR(reg) ? NULL : reg;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Same as ecrt_slave_config_create_voe_handler(), but with ERR_PTR() return
  * value.
@@ -1311,7 +1309,7 @@ ec_voe_handler_t *ecrt_slave_config_create_voe_handler_err(
     return voe;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 ec_voe_handler_t *ecrt_slave_config_create_voe_handler(
         ec_slave_config_t *sc, size_t size)
@@ -1321,24 +1319,26 @@ ec_voe_handler_t *ecrt_slave_config_create_voe_handler(
     return IS_ERR(voe) ? NULL : voe;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
-void ecrt_slave_config_state(const ec_slave_config_t *sc,
+int ecrt_slave_config_state(const ec_slave_config_t *sc,
         ec_slave_config_state_t *state)
 {
-    state->online = sc->slave ? 1 : 0;
+    const ec_slave_t *slave = sc->slave;
+
+    state->online = slave ? 1 : 0;
     if (state->online) {
         state->operational =
-            sc->slave->current_state == EC_SLAVE_STATE_OP
-            && !sc->slave->force_config;
-        state->al_state = sc->slave->current_state;
+            slave->current_state == EC_SLAVE_STATE_OP && !slave->force_config;
+        state->al_state = slave->current_state;
     } else {
         state->operational = 0;
         state->al_state = EC_SLAVE_STATE_UNKNOWN;
     }
+    return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 int ecrt_slave_config_idn(ec_slave_config_t *sc, uint8_t drive_no,
         uint16_t idn, ec_al_state_t state, const uint8_t *data,
@@ -1393,7 +1393,7 @@ int ecrt_slave_config_idn(ec_slave_config_t *sc, uint8_t drive_no,
     return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 int ecrt_slave_config_flag(ec_slave_config_t *sc, const char *key,
         int32_t value)
@@ -1429,7 +1429,7 @@ int ecrt_slave_config_flag(ec_slave_config_t *sc, const char *key,
     return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** \cond */
 
@@ -1462,4 +1462,4 @@ EXPORT_SYMBOL(ecrt_slave_config_flag);
 
 /** \endcond */
 
-/*****************************************************************************/
+/****************************************************************************/

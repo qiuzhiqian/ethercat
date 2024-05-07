@@ -1,4 +1,4 @@
-/******************************************************************************
+/*****************************************************************************
  *
  *  Copyright (C) 2006-2023  Florian Pose, Ingenieurgemeinschaft IgH
  *
@@ -17,19 +17,13 @@
  *  with the IgH EtherCAT Master; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- *  ---
- *
- *  The license mentioned above concerns the source code only. Using the
- *  EtherCAT technology and brand is only permitted in compliance with the
- *  industrial property and similar rights of Beckhoff Automation GmbH.
- *
- *****************************************************************************/
+ ****************************************************************************/
 
 /** \file
  * EtherCAT master state machine.
  */
 
-/*****************************************************************************/
+/****************************************************************************/
 
 #include "globals.h"
 #include "master.h"
@@ -42,13 +36,13 @@
 #include "fsm_master.h"
 #include "fsm_foe.h"
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Time difference [ns] to tolerate without setting a new system time offset.
  */
 #define EC_SYSTEM_TIME_TOLERANCE_NS 1000000
 
-/*****************************************************************************/
+/****************************************************************************/
 
 void ec_fsm_master_state_start(ec_fsm_master_t *);
 void ec_fsm_master_state_broadcast(ec_fsm_master_t *);
@@ -69,7 +63,7 @@ void ec_fsm_master_state_soe_request(ec_fsm_master_t *);
 void ec_fsm_master_enter_clear_addresses(ec_fsm_master_t *);
 void ec_fsm_master_enter_write_system_times(ec_fsm_master_t *);
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Constructor.
  */
@@ -106,7 +100,7 @@ void ec_fsm_master_init(
     ec_fsm_sii_init(&fsm->fsm_sii, fsm->datagram);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Destructor.
  */
@@ -124,7 +118,7 @@ void ec_fsm_master_clear(
     ec_fsm_sii_clear(&fsm->fsm_sii);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Reset state machine.
  */
@@ -148,7 +142,7 @@ void ec_fsm_master_reset(
     fsm->rescan_required = 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Executes the current state of the state machine.
  *
@@ -171,7 +165,7 @@ int ec_fsm_master_exec(
     return 1;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /**
  * \return true, if the state machine is in an idle phase
@@ -183,7 +177,7 @@ int ec_fsm_master_idle(
     return fsm->idle;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Restarts the master state machine.
  */
@@ -196,9 +190,9 @@ void ec_fsm_master_restart(
     fsm->state(fsm); // execute immediately
 }
 
-/******************************************************************************
+/*****************************************************************************
  * Master state machine
- *****************************************************************************/
+ ****************************************************************************/
 
 /** Master state: START.
  *
@@ -256,7 +250,7 @@ void ec_fsm_master_state_start(
     fsm->state = ec_fsm_master_state_broadcast;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Master state: BROADCAST.
  *
@@ -339,6 +333,7 @@ void ec_fsm_master_state_broadcast(
             ec_device_index_t dev_idx;
 
             master->scan_busy = 1;
+            master->scan_index = 0;
             up(&master->scan_sem);
 
             // clear all slaves and scan the bus
@@ -437,7 +432,7 @@ void ec_fsm_master_state_broadcast(
     }
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Check for pending SII write requests and process one.
  *
@@ -499,7 +494,7 @@ int ec_fsm_master_action_process_sii(
     return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Check for pending internal SDO/SoE requests and process one.
  *
@@ -582,7 +577,7 @@ int ec_fsm_master_action_process_int_request(
     return 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Master action: IDLE.
  *
@@ -642,7 +637,7 @@ void ec_fsm_master_action_idle(
     ec_fsm_master_restart(fsm);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Master action: Get state of next slave.
  */
@@ -670,7 +665,7 @@ void ec_fsm_master_action_next_slave_state(
     ec_fsm_master_action_idle(fsm);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Master action: Configure.
  */
@@ -726,7 +721,7 @@ void ec_fsm_master_action_configure(
     ec_fsm_master_action_next_slave_state(fsm);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Master state: READ STATE.
  *
@@ -783,7 +778,7 @@ void ec_fsm_master_state_read_state(
     ec_fsm_master_action_next_slave_state(fsm);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Master state: ACKNOWLEDGE.
  */
@@ -805,7 +800,7 @@ void ec_fsm_master_state_acknowledge(
     ec_fsm_master_action_configure(fsm);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Start clearing slave addresses.
  */
@@ -821,7 +816,7 @@ void ec_fsm_master_enter_clear_addresses(
     fsm->state = ec_fsm_master_state_clear_addresses;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Master state: CLEAR ADDRESSES.
  */
@@ -842,6 +837,7 @@ void ec_fsm_master_state_clear_addresses(
                 ec_device_names[fsm->dev_idx != 0]);
         ec_datagram_print_state(datagram);
         master->scan_busy = 0;
+        master->scan_index = master->slave_count;
         wake_up_interruptible(&master->scan_queue);
         ec_fsm_master_restart(fsm);
         return;
@@ -865,7 +861,7 @@ void ec_fsm_master_state_clear_addresses(
     fsm->state = ec_fsm_master_state_dc_measure_delays;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Master state: DC MEASURE DELAYS.
  */
@@ -885,6 +881,7 @@ void ec_fsm_master_state_dc_measure_delays(
                 " on %s link: ", ec_device_names[fsm->dev_idx != 0]);
         ec_datagram_print_state(datagram);
         master->scan_busy = 0;
+        master->scan_index = master->slave_count;
         wake_up_interruptible(&master->scan_queue);
         ec_fsm_master_restart(fsm);
         return;
@@ -907,6 +904,7 @@ void ec_fsm_master_state_dc_measure_delays(
 
     // begin scanning of slaves
     fsm->slave = master->slaves;
+    master->scan_index = 0;
     EC_MASTER_DBG(master, 1, "Scanning slave %u on %s link.\n",
             fsm->slave->ring_position,
             ec_device_names[fsm->slave->device_index != 0]);
@@ -916,7 +914,7 @@ void ec_fsm_master_state_dc_measure_delays(
     fsm->datagram->device_index = fsm->slave->device_index;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Master state: SCAN SLAVE.
  *
@@ -952,6 +950,7 @@ void ec_fsm_master_state_scan_slave(
 
     // another slave to fetch?
     fsm->slave++;
+    master->scan_index++;
     if (fsm->slave < master->slaves + master->slave_count) {
         EC_MASTER_DBG(master, 1, "Scanning slave %u on %s link.\n",
                 fsm->slave->ring_position,
@@ -966,6 +965,7 @@ void ec_fsm_master_state_scan_slave(
             (jiffies - fsm->scan_jiffies) * 1000 / HZ);
 
     master->scan_busy = 0;
+    master->scan_index = master->slave_count;
     wake_up_interruptible(&master->scan_queue);
 
     ec_master_calc_dc(master);
@@ -988,7 +988,7 @@ void ec_fsm_master_state_scan_slave(
     }
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Master state: CONFIGURE SLAVE.
  *
@@ -1018,7 +1018,7 @@ void ec_fsm_master_state_configure_slave(
     ec_fsm_master_action_next_slave_state(fsm);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Start writing DC system times.
  */
@@ -1064,7 +1064,7 @@ void ec_fsm_master_enter_write_system_times(
     ec_fsm_master_restart(fsm);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Configure 32 bit time offset.
  *
@@ -1106,7 +1106,7 @@ u64 ec_fsm_master_dc_offset32(
     }
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Configure 64 bit time offset.
  *
@@ -1146,7 +1146,7 @@ u64 ec_fsm_master_dc_offset64(
     return new_offset;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Master state: DC READ OFFSET.
  */
@@ -1199,7 +1199,7 @@ void ec_fsm_master_state_dc_read_offset(
     fsm->state = ec_fsm_master_state_dc_write_offset;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Master state: DC WRITE OFFSET.
  */
@@ -1234,7 +1234,7 @@ void ec_fsm_master_state_dc_write_offset(
     ec_fsm_master_enter_write_system_times(fsm);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Master state: ASSIGN SII.
  */
@@ -1271,7 +1271,7 @@ cont:
     fsm->state(fsm); // execute immediately
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Master state: WRITE SII.
  */
@@ -1325,7 +1325,7 @@ void ec_fsm_master_state_write_sii(
     ec_fsm_master_restart(fsm);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Master state: SDO DICTIONARY.
  */
@@ -1360,7 +1360,7 @@ void ec_fsm_master_state_sdo_dictionary(
     ec_fsm_master_restart(fsm);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Master state: SDO REQUEST.
  */
@@ -1403,7 +1403,7 @@ void ec_fsm_master_state_sdo_request(
     ec_fsm_master_restart(fsm);
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Master state: SoE REQUEST.
  */
@@ -1446,4 +1446,4 @@ void ec_fsm_master_state_soe_request(
     ec_fsm_master_restart(fsm);
 }
 
-/*****************************************************************************/
+/****************************************************************************/

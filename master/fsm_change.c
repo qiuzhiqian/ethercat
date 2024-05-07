@@ -1,6 +1,4 @@
-/******************************************************************************
- *
- *  $Id$
+/*****************************************************************************
  *
  *  Copyright (C) 2006-2008  Florian Pose, Ingenieurgemeinschaft IgH
  *
@@ -19,32 +17,29 @@
  *  with the IgH EtherCAT Master; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  *
- *  ---
- *
- *  The license mentioned above concerns the source code only. Using the
- *  EtherCAT technology and brand is only permitted in compliance with the
- *  industrial property and similar rights of Beckhoff Automation GmbH.
- *
- *****************************************************************************/
+ ****************************************************************************/
 
 /**
    \file
    EtherCAT state change FSM.
 */
 
-/*****************************************************************************/
+/****************************************************************************/
 
 #include "globals.h"
 #include "master.h"
 #include "fsm_change.h"
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Timeout while waiting for AL state change [s].
+ *
+ * ETG2000_S_R_V1i0i15 section 5.3.7.2 mentions 10 s as maximum AL state
+ * change timeout.
  */
-#define EC_AL_STATE_CHANGE_TIMEOUT 5
+#define EC_AL_STATE_CHANGE_TIMEOUT 10
 
-/*****************************************************************************/
+/****************************************************************************/
 
 void ec_fsm_change_state_start(ec_fsm_change_t *);
 void ec_fsm_change_state_check(ec_fsm_change_t *);
@@ -56,7 +51,7 @@ void ec_fsm_change_state_check_ack(ec_fsm_change_t *);
 void ec_fsm_change_state_end(ec_fsm_change_t *);
 void ec_fsm_change_state_error(ec_fsm_change_t *);
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /**
    Constructor.
@@ -71,7 +66,7 @@ void ec_fsm_change_init(ec_fsm_change_t *fsm, /**< finite state machine */
     fsm->spontaneous_change = 0;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /**
    Destructor.
@@ -81,7 +76,7 @@ void ec_fsm_change_clear(ec_fsm_change_t *fsm /**< finite state machine */)
 {
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /**
    Starts the change state machine.
@@ -98,7 +93,7 @@ void ec_fsm_change_start(ec_fsm_change_t *fsm, /**< finite state machine */
     fsm->state = ec_fsm_change_state_start;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /**
    Starts the change state machine to only acknowlegde a slave's state.
@@ -114,7 +109,7 @@ void ec_fsm_change_ack(ec_fsm_change_t *fsm, /**< finite state machine */
     fsm->state = ec_fsm_change_state_start_code;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /**
    Executes the current state of the state machine.
@@ -129,7 +124,7 @@ int ec_fsm_change_exec(ec_fsm_change_t *fsm /**< finite state machine */)
         && fsm->state != ec_fsm_change_state_error;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /**
    Returns, if the state machine terminated with success.
@@ -141,9 +136,9 @@ int ec_fsm_change_success(ec_fsm_change_t *fsm /**< Finite state machine */)
     return fsm->state == ec_fsm_change_state_end;
 }
 
-/******************************************************************************
+/*****************************************************************************
  *  state change state machine
- *****************************************************************************/
+ ****************************************************************************/
 
 /**
    Change state: START.
@@ -165,7 +160,7 @@ void ec_fsm_change_state_start(ec_fsm_change_t *fsm
     fsm->state = ec_fsm_change_state_check;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /**
    Change state: CHECK.
@@ -228,7 +223,7 @@ void ec_fsm_change_state_check(ec_fsm_change_t *fsm
     fsm->state = ec_fsm_change_state_status;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /**
    Change state: STATUS.
@@ -319,7 +314,7 @@ void ec_fsm_change_state_status(ec_fsm_change_t *fsm
     fsm->retries = EC_FSM_RETRIES;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /** Enter reading AL status code.
  */
@@ -337,7 +332,7 @@ void ec_fsm_change_state_start_code(
     fsm->state = ec_fsm_change_state_code;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /**
    Application layer status messages.
@@ -397,7 +392,7 @@ const ec_code_msg_t al_status_messages[] = {
 };
 
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /**
    Change state: CODE.
@@ -449,7 +444,7 @@ void ec_fsm_change_state_code(ec_fsm_change_t *fsm
     fsm->state = ec_fsm_change_state_ack;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /**
    Change state: ACK.
@@ -486,7 +481,7 @@ void ec_fsm_change_state_ack(ec_fsm_change_t *fsm /**< finite state machine */)
     fsm->state = ec_fsm_change_state_check_ack;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /**
    Change state: CHECK ACK.
@@ -552,7 +547,7 @@ void ec_fsm_change_state_check_ack(ec_fsm_change_t *fsm
     fsm->retries = EC_FSM_RETRIES;
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /**
    State: ERROR.
@@ -563,7 +558,7 @@ void ec_fsm_change_state_error(ec_fsm_change_t *fsm
 {
 }
 
-/*****************************************************************************/
+/****************************************************************************/
 
 /**
    State: END.
@@ -574,4 +569,4 @@ void ec_fsm_change_state_end(ec_fsm_change_t *fsm
 {
 }
 
-/*****************************************************************************/
+/****************************************************************************/
