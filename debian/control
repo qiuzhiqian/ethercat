@@ -1,0 +1,22 @@
+Source: ethercat
+Section: admin
+Priority: optional
+Maintainer: xml <xiamengliang@gmail.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.6.0
+Homepage: https://github.com/qiuzhiqian/ethercat
+#Vcs-Browser: https://salsa.debian.org/debian/ethercat
+#Vcs-Git: https://salsa.debian.org/debian/ethercat.git
+Rules-Requires-Root: no
+
+Package: ethercat
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, ethercat-dkms
+Description: ethercat cli and config
+ ethercat cli and config package
+
+Package: ethercat-dkms
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: ethercat dkms
+ ethercat dkms package

@@ -1,0 +1,9 @@
+Makefile.kbuild usr/src/ethercat-1.6.1/
+Kbuild usr/src/ethercat-1.6.1/
+devices/ usr/src/ethercat-1.6.1/
+master/ usr/src/ethercat-1.6.1/
+examples/ usr/src/ethercat-1.6.1/
+include/ usr/src/ethercat-1.6.1/
+tty/ usr/src/ethercat-1.6.1/
+*.h usr/src/ethercat-1.6.1/
+dkms.conf usr/src/ethercat-1.6.1/
